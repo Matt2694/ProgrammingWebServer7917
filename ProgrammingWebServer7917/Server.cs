@@ -24,9 +24,11 @@ namespace ProgrammingWebServer7917
             TcpClient client = listener.AcceptTcpClient();
             StreamReader sr = new StreamReader(client.GetStream());
             StreamWriter sw = new StreamWriter(client.GetStream());
+            sw.AutoFlush = true;
             string output = "";
             DateTime dateNow;
-            string returnRequest;
+            string message;
+            string header;
             if (client.Connected)
             {
                 while (running)
@@ -35,17 +37,18 @@ namespace ProgrammingWebServer7917
                     dateNow = DateTime.Now;
                     switch (request)
                     {
+
                         case "GET /date HTTP/1.1":
-                            returnRequest = dateNow.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            output = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: " + returnRequest.Length + "\n\n" + returnRequest;
+                            message = dateNow.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            header = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: " + message.Length;
+                            output =  header + "\n\n" + message;
                             sw.WriteLine(output);
-                            sw.Flush();
                             break;
                         case "GET /time HTTP/1.1":
-                            returnRequest = dateNow.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
-                            output = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: " + returnRequest.Length + "\n\n" + returnRequest;
+                            message = dateNow.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                            header = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: " + message.Length;
+                            output = header + "\n\n" + message;
                             sw.WriteLine(output);
-                            sw.Flush();
                             break;
                         default:
                             sw.WriteLine("404 Page Not Found.");
